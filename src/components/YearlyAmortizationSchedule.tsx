@@ -11,6 +11,8 @@ const YearlyAmortizationSchedule = ({form}:Props) => {
 
     const [showSlider, setShowSlider] = useState(false);
 
+    const [term=0 ] = form;
+
     const now = new Date();
     const currentYear = now.getFullYear();
     const endYear = currentYear + form.term;
