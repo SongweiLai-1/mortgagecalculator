@@ -40,9 +40,9 @@ const DetailBarChart = ({ form }: Props) => {
         <BarChart
             layout="vertical"
             width={200}
-            height={150}
+            height={120}
             data={data}
-            margin={{top: -5, right: 80, bottom: 0, left: 30}}
+            margin={{top: 0, right: 80, bottom: 0, left: 30}}
             barCategoryGap={10}
         >
             <XAxis dataKey="value" type="number" hide={true}/>

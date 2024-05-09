@@ -1,5 +1,17 @@
 import React, {useEffect, useState} from "react";
-import {Card, CardBody, CardFooter, Heading, Stack, Button, Text, CardHeader, Flex,Box} from "@chakra-ui/react";
+import {
+    Card,
+    CardBody,
+    CardFooter,
+    Heading,
+    Stack,
+    Button,
+    Text,
+    CardHeader,
+    Flex,
+    Box,
+    useBoolean, HStack, Divider
+} from "@chakra-ui/react";
 import { DiagramData, initialDiagramData} from '../Caculator'
 import {repayment} from "../LineChartDetails/Digram";
 import { FaHome } from "react-icons/fa";
@@ -18,25 +30,22 @@ interface Props {
     form: DiagramData;
 }
 
-const sumTheRepayment = (arr: repayment[]) => {
-    let sum = 0;
-    for (let i = 0; i < arr.length; i++) {
-        sum += Number(arr[i].equity || 0); // Handle undefined values
-    } return sum;}
 
-function monthlyPayment (principal:number,monthlyInterest:number,numOfPayments:number) {
-    return (principal * monthlyInterest * Math.pow(1 + monthlyInterest, numOfPayments)) /
-        (Math.pow(1 + monthlyInterest, numOfPayments) - 1)
+function calculateTotalInterest(principal:number, monthlyInterest:number, numOfPayments:number) {
+
+    const monthlyPayment = (principal * monthlyInterest) /
+        (1 - Math.pow(1 + monthlyInterest, -numOfPayments));
+    const totalPayment = monthlyPayment * numOfPayments;
+    const totalInterest = totalPayment - principal;
+    if (isNaN(totalInterest)) {
+        const totalInterest = 0
+        return totalInterest
+
+    } else {
+        return parseFloat(totalInterest.toFixed(2));
+    }
 }
 
-function calculateTotalInterest(principal:number,monthlyInterest:number,numOfPayments:number) {
-
-    const monthlyPayment = (principal * monthlyInterest)
-        / (1 - Math.pow(1 + monthlyInterest, -numOfPayments)); // 计算每月的还款额
-    const totalPayment = monthlyPayment * numOfPayments; // 计算总还款额
-    const totalInterest = totalPayment - principal;   // 计算总利息
-    return parseFloat(totalInterest.toFixed(2));
-}
 
 const MortgageDetails = ({form}: Props) => {
 
@@ -58,9 +67,8 @@ const MortgageDetails = ({form}: Props) => {
     const totalTaxPaid = land_tax * term;
     const totalHomeInsurance = land_tax * home_insurance;
 
-    const monthly = monthlyPayment(principal, monthlyInterest, numOfPayments);
 
-    const totalInterestPay = calculateTotalInterest(principal, monthlyInterest, numOfPayments);
+    const totalInterestPay = calculateTotalInterest(principal, monthlyInterest, numOfPayments) ;
     const totalPayment = loanAmount + down_payment + totalInterestPay + totalTaxPaid + totalHomeInsurance;
 
     useEffect(() => {
@@ -73,41 +81,50 @@ const MortgageDetails = ({form}: Props) => {
             totalHomeInsurance: totalHomeInsurance,
             totalPay:totalPayment
         });
-    }, [monthly,totalInterestPay,totalHomeInsurance,totalTaxPaid]);
+    }, [totalInterestPay,totalHomeInsurance,totalTaxPaid]);
 
+    const [display, sedisplay] = useBoolean()
 
     return (
         <Card
             direction={{ base: 'column', sm: 'row' }}
-            overflow='hidden'
-            variant='outline'>
+            overflow='hidden'>
             <Stack>
-                <CardHeader>
+                <CardHeader >
                     <Flex alignItems='center' gap='1'>
                         <FaHome size={38} />
                         <Heading size='md' ml={2}>Mortgage Detail</Heading>
                     </Flex>
-                    </CardHeader>
-                <CardBody>
-                    <Flex>
-                        <Box>
-                            <p>Loan Amount: {loanAmount} </p>
-                            <p>Down Payment: {down_payment}</p>
-                            <p>Total Interest Paid: {totalInterestPay}</p>
-                            <p>Total Tax Paid: {totalTaxPaid}</p>
-                            <p>Total Home Insurance: {totalHomeInsurance}</p>
-                            <p>Your monthly repayment {monthly.toFixed(2)}</p>
+                </CardHeader>
+                <Divider w="300%"/>
+                <CardBody >
+                    <Stack>
+                    <HStack>
+                        <Box  marginLeft={5} >
+                            <p>Loan Amount:  </p>
+                            <p>Down Payment:</p>
+                            <p>Total Interest Paid: </p>
+                            <p>Total Tax Paid: </p>
+                            <p>Total Home Insurance: </p>
                         </Box>
-                        <DetailBarChart form={detailForm}/>
-                    </Flex>
-                    <Box>
-                        <p>Total of {numOfPayments} Payments: {totalPayment}</p>
-                    </Box>
+                        <Box>
+                            <Text>{loanAmount}</Text>
+                            <Text> {down_payment}</Text>
+                            <Text>{totalInterestPay}</Text>
+                            <Text>{totalTaxPaid}</Text>
+                            <Text>{totalHomeInsurance}</Text>
+                        </Box>
+                        {loanAmount > 0 ? (display ? null : <DetailBarChart form={detailForm} />) : null}
+
+                    </HStack>
+                            <Text>Total of {numOfPayments} Payments: {totalPayment}</Text>
+
+                    </Stack>
                 </CardBody>
-                <CardFooter>
-                </CardFooter>
             </Stack>
         </Card>
     )
 }
 export default MortgageDetails
+
+

@@ -1,7 +1,7 @@
 import React from "react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import {LineChart, Line, XAxis, YAxis, Tooltip, Legend, Area, AreaChart} from 'recharts';
 import { DiagramData } from '../Caculator';
-import {Box, Card} from "@chakra-ui/react";
+import {Box, Card, CardBody, CardHeader, Divider, HStack, Stack, Text, useColorModeValue} from "@chakra-ui/react";
 
 export interface repayment {
     term?: number;
@@ -13,26 +13,43 @@ export interface repayment {
 
 interface Props {
     data: repayment[];
+    monthlyRepayment: number;
+    monthlyInsurence : number;
 }
 
-const Digram: React.FC<Props> = ({ data }) => {
+const Digram: React.FC<Props> = ({ data, monthlyRepayment,monthlyInsurence}: Props) => {
+
     const renderLineChart = (
-        <Card>
-        <Box>
-        <LineChart
-            width={550}
+        <Card maxW='xl' >
+        <CardHeader >
+            <Stack>
+            <Text fontSize='3xl'>$ {isNaN(monthlyRepayment) ? '0.00' : monthlyRepayment.toFixed(2)}</Text>
+            <Text fontSize='xs' color='grey'>Your estimated monthly payment.</Text>
+            </Stack>
+        </CardHeader>
+        <HStack >
+            <Text fontSize='xs'> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monthly Home Insurance:</Text>
+            <Text fontSize='xs'>{isNaN(monthlyInsurence) ? '0.00' : monthlyInsurence.toFixed(2)}</Text>
+        </HStack>
+            <HStack spacing={5} marginTop={4} marginBottom={4}><Divider /></HStack>
+
+        <CardBody  bg={useColorModeValue('grey.50', 'grey.400')}>
+        <Text fontSize='xs'>Payment Trend</Text>
+        <AreaChart
+            width={480}
             height={400}
             data={data}
-            margin={{ top: 50, right: 0, left: 50, bottom: 5 }}>
+            margin={{ top: 0, right: 0, left: 10, bottom: 0 }}>
 
             <XAxis dataKey="term" />
             <YAxis />
             <Tooltip />
+            <Area name="Total Pay Within Interest" type="monotone" dataKey="totalInterestPay" stroke="#8884d8" fill="#8884d8" />
+            <Area name="Net Equity" type="monotone" dataKey="equity" />
+            <Area name="Balance" dataKey="balance" stroke="black" fill="transparent" />
             <Legend />
-            <Line type="monotone" dataKey="equity" stroke="#8884d8" dot={false} />
-            <Line type="monotone" dataKey="totalInterestPay" stroke="#0D83C7" dot={false} />
-        </LineChart>
-        </Box>
+        </AreaChart>
+        </CardBody>
         </Card>
 
     );

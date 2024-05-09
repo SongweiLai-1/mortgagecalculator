@@ -7,7 +7,6 @@ export const initialDiagramData: DiagramData = {
     term: 0,
     houseValue: 0 ,
     loanAmount: 0,
-    equity: 0,
     principal: 0,
     yearlyInterestRate: 0,
     down_payment: 0,
@@ -20,7 +19,6 @@ export interface DiagramData {
     term?: number ;
     houseValue?: number;
     loanAmount?: number;
-    equity?: number ;
     principal?: number ;
     yearlyInterestRate?: number ;
     down_payment?: number ;
@@ -29,52 +27,95 @@ export interface DiagramData {
     home_insurance?: number;
 }
 
-
-
 interface Props {
     form: DiagramData;
 }
 
+function monthlyPayment (principal:number,yearlyInterestRate:number,yearlyPayment:number,numOfPaymentType:string) {
+
+    const yearlyInterest = (yearlyInterestRate || 0) / 100 ;
+    const monthlyInterest = yearlyInterest / 12;
+    const numberOfPayment = yearlyPayment * 12;
+
+    if (numOfPaymentType) {
+        return (principal * monthlyInterest * Math.pow(1 + monthlyInterest, numberOfPayment)) /
+            (Math.pow(1 + monthlyInterest, numberOfPayment) - 1) } else {
+
+        return (principal * yearlyInterest * Math.pow(1 + yearlyInterest, yearlyPayment)) /
+            (Math.pow(1 + yearlyInterest, yearlyPayment) - 1) }
+    }
 
 
+function repaymentList (loanAmount:number,yearlyInterestRate:number,yearlyPayment:number,numOfPaymentType:string) {
 
-function monthlyPayment (principal:number,monthlyInterest:number,numOfPayments:number) {
-    return (principal * monthlyInterest * Math.pow(1 + monthlyInterest, numOfPayments)) /
-        (Math.pow(1 + monthlyInterest, numOfPayments) - 1)
+    const monthlyInterest = yearlyInterestRate / 12 / 100;
+    const numOfMonthlyPayment = yearlyPayment * 12;
+
+    const monthly = monthlyPayment(loanAmount, yearlyInterestRate, yearlyPayment,'monthly');
+    const yearly = monthlyPayment(loanAmount, yearlyInterestRate, yearlyPayment, 'yearly');
+
+
+    let monthlyPayments: repayment[] = [];
+    let yearlyPayments: repayment[] = [];
+
+    let principal = loanAmount;
+    let bal = loanAmount;
+    let equity = 0
+    let totalInterestPay = 0
+
+    if (numOfPaymentType === 'monthly') {
+        for (let t = 1; t <= numOfMonthlyPayment; t++) {
+        const thisMonthsInterest=(principal-equity)*monthlyInterest;
+        const bal_thisMonthsInterest = bal*monthlyInterest;
+        equity+=(monthly-thisMonthsInterest);//得到资产
+
+        totalInterestPay += (monthly)
+        monthlyPayments.push({term: t , equity: equity ,totalInterestPay:totalInterestPay, balance: bal});
+        bal-=(monthly-thisMonthsInterest);}
+    }
+    else {
+        for (let t = 1; t <= yearlyPayment; t++) {
+            const thisYearlyInterest=(principal-equity)*yearlyInterestRate;
+            const bal_thisMonthsInterest = bal*yearlyInterestRate;
+            equity+=(yearly-thisYearlyInterest);//得到资产
+
+            totalInterestPay += (yearly)
+            yearlyPayments.push({term: t , equity: equity ,totalInterestPay:totalInterestPay, balance: bal});
+            bal-=(yearly-thisYearlyInterest);}
+    }
+
+
+    return monthlyPayments
 }
 
-function repaymentList (principal:number,yearlyInterestRate:number,yearlyPayment:number) {
+function monthlyInsurence(term: number, insurence: number): number {
+    const totalMonthlyTerm = term * 12;
+    const totalInsurancePay = insurence / totalMonthlyTerm;
 
-    const interest = (yearlyInterestRate || 0) / 100 ;
-    const monthlyInterest = interest / 12;
-    const numOfPayments = (yearlyPayment || 0) * 12;
+    return parseFloat(totalInsurancePay.toFixed(2));
+}
 
-    const monthly = monthlyPayment(principal, monthlyInterest, numOfPayments);
-
-    const equityList: repayment[] = [];
-    let equity = 0;
-    let totalInterestPay = 0;
-    let balance = principal;
-
-    for (let t = 1; t <= numOfPayments; t++) {
-        const thisMonthsInterest = (balance - equity) * monthlyInterest;
-        equity += (monthly - thisMonthsInterest);
-        totalInterestPay += monthly;
-        equityList.push({ term: t, equity: equity, totalInterestPay: totalInterestPay, balance: balance });
-        balance -= (monthly - thisMonthsInterest);
-    }
-    return equityList}
 
 
 const Calculator = ({ form }: Props) => {
 
-    const { loanAmount = 0, yearlyInterestRate = 0, term = 0 } = form;
+    const {
+        loanAmount = 0,
+        yearlyInterestRate = 0,
+        term = 0,
+        home_insurance = 0 } = form;
+
 
     return (
         <div>
-            <Digram data={repaymentList(loanAmount,yearlyInterestRate,term)} />
+            <Digram
+                data={repaymentList(loanAmount,yearlyInterestRate,term,'monthly')}
+                monthlyRepayment={monthlyPayment(loanAmount,yearlyInterestRate,term,'monthly')}
+                monthlyInsurence={monthlyInsurence(term,home_insurance)}
+            />
         </div>
     );
 }
 
 export default Calculator;
+export {monthlyPayment}

@@ -1,13 +1,11 @@
-
 import {
-    Button,
     Input,
     InputGroup,
     InputLeftAddon,
     InputRightAddon,
     Stack,
     Text,
-    HStack, Slider, SliderTrack, SliderFilledTrack, SliderThumb
+    HStack, Slider, SliderTrack, SliderFilledTrack, SliderThumb, Container, Box
 } from '@chakra-ui/react';
 import React, {useEffect, useState} from "react";
 import './FormStyle.css';
@@ -19,6 +17,7 @@ interface Props {
 }
 
 const BorrowingCalculator = ({ onSubmit }: Props) => {
+
 
 
     const [formData, setFormData] = useState<DiagramData>(initialDiagramData);
@@ -46,40 +45,26 @@ const BorrowingCalculator = ({ onSubmit }: Props) => {
             down_payment: value
         });
     };
-
-
     const down_payment = formData.down_payment ?? 0;
     const houseValue = formData.houseValue ?? 0;
+
 
     useEffect(() => {
         const loanAmount = houseValue - down_payment;
         const down_payment_rate = (down_payment / houseValue) * 100 ;
 
-        setFormData(prevState => ({
-                ...prevState,
-                down_payment_rate,
-                loanAmount,
-            }));
-        }, [formData.down_payment,formData.houseValue]);
-
-    useEffect(() => {
-        if (down_payment == 0 || null ) {
-            const downPaymentRate = formData.down_payment_rate ?? 0;
-            const newDownPayment = houseValue * downPaymentRate;
-                setFormData(prevState => ({
-                    ...prevState,
-                    down_payment: newDownPayment,
-                }));
-                console.log(newDownPayment)
-            }
-    }, [formData.down_payment_rate]);
-
-
-
+        setFormData({
+            ...formData,
+            down_payment_rate: down_payment_rate,
+            down_payment: down_payment,
+            loanAmount: loanAmount
+            });
+        }, [formData.down_payment,formData.houseValue,formData.land_tax,formData.home_insurance]);
 
 
 
     return (
+        <Container>
             <Stack spacing={3}>
                 <HStack>
                     <Text flex="1">Home Value:</Text>
@@ -115,7 +100,6 @@ const BorrowingCalculator = ({ onSubmit }: Props) => {
                                onChange={handleInputChange}
                                value={formData.down_payment_rate}
                         /><InputRightAddon>%</InputRightAddon>
-
                     </InputGroup>
                 </HStack>
 
@@ -123,8 +107,8 @@ const BorrowingCalculator = ({ onSubmit }: Props) => {
                     defaultValue={60} min={0} max={10000000} step={10000}
                     name="down_payment"
                     aria-label="slider-ex-1"
-                    onChange={handleSliderChangeEnd}
-                >
+                    onChange={handleSliderChangeEnd}>
+
                     <SliderTrack>
                         <SliderFilledTrack />
                     </SliderTrack>
@@ -156,6 +140,7 @@ const BorrowingCalculator = ({ onSubmit }: Props) => {
                             onChange={handleInputChange}
                             value={formData.term}
                             w="80%"
+                            max={100}
                         />
                         <InputRightAddon>Years</InputRightAddon>
                     </InputGroup>
@@ -205,6 +190,9 @@ const BorrowingCalculator = ({ onSubmit }: Props) => {
                     </InputGroup>
                 </HStack>
             </Stack>
+
+        </Container>
+
     )
 }
 
