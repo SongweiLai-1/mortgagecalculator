@@ -1,7 +1,18 @@
 import React from "react";
 import {LineChart, Line, XAxis, YAxis, Tooltip, Legend, Area, AreaChart} from 'recharts';
 import { DiagramData } from '../Caculator';
-import {Box, Card, CardBody, CardHeader, Divider, HStack, Stack, Text, useColorModeValue} from "@chakra-ui/react";
+import {
+    Box,
+    Card,
+    CardBody,
+    CardHeader,
+    Container,
+    Divider,
+    HStack,
+    Stack,
+    Text,
+    useColorModeValue
+} from "@chakra-ui/react";
 
 export interface repayment {
     term?: number;
@@ -36,10 +47,10 @@ const Digram: React.FC<Props> = ({ data, monthlyRepayment,monthlyInsurence}: Pro
         <CardBody  bg={useColorModeValue('grey.50', 'grey.400')}>
         <Text fontSize='xs'>Payment Trend</Text>
         <AreaChart
-            width={480}
+            width={500}
             height={400}
             data={data}
-            margin={{ top: 0, right: 0, left: 10, bottom: 0 }}>
+            >
 
             <XAxis dataKey="term" />
             <YAxis />
@@ -51,7 +62,6 @@ const Digram: React.FC<Props> = ({ data, monthlyRepayment,monthlyInsurence}: Pro
         </AreaChart>
         </CardBody>
         </Card>
-
     );
 
     return renderLineChart;

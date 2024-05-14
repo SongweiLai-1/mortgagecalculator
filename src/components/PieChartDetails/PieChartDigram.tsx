@@ -1,14 +1,11 @@
 import React from 'react';
-import { PieChart, Pie, ResponsiveContainer, Cell, Tooltip, Label } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { pieForm } from './PieChartDetails';
-import {Card, CardBody} from "@chakra-ui/react";
-
+import {HStack} from "@chakra-ui/react";
 
 interface Props {
     data: pieForm[];
 }
-
-
 
 const PieChartDigram = ({ data }: Props) => {
 
@@ -20,7 +17,8 @@ const PieChartDigram = ({ data }: Props) => {
     const CustomTooltip = ({ active, payload, totalValue }: any) => {
         if (active && payload && payload.length) {
             const value = payload[0].value;
-            const percent = (value / totalValue * 100).toFixed(2);
+            const percent = ((value / totalValue) * 100).toFixed(2);
+
             return (
                 <div className="custom-tooltip">
                     <p className="label">{`${payload[0].name}:(${percent}%)`}</p> {/* 显示名称、值和百分比 */}
@@ -31,7 +29,7 @@ const PieChartDigram = ({ data }: Props) => {
     };
 
     return (
-        <>
+        <HStack>
             <PieChart width={380} height={380}>
                 <Pie
                     data={data}
@@ -43,7 +41,7 @@ const PieChartDigram = ({ data }: Props) => {
                     paddingAngle={5}
                     labelLine={true}
                     label={({ name }) => name} // 只显示名称
-                >
+                     >
                     {data.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
@@ -51,7 +49,7 @@ const PieChartDigram = ({ data }: Props) => {
                 <Tooltip content={<CustomTooltip totalValue={totalValue} />} /> {/* 使用自定义的 Tooltip */}
             </PieChart>
 
-        </>
+        </HStack>
     );
 }
 

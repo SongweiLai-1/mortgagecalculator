@@ -64,8 +64,7 @@ const BorrowingCalculator = ({ onSubmit }: Props) => {
 
 
     return (
-        <Container>
-            <Stack spacing={3}>
+            <Stack spacing={5}>
                 <HStack>
                     <Text flex="1">Home Value:</Text>
                     <InputGroup w="400px">
@@ -80,9 +79,6 @@ const BorrowingCalculator = ({ onSubmit }: Props) => {
                         />
                     </InputGroup>
                 </HStack>
-
-
-
                 <HStack>
                     <Text flex="1">Down Payment:</Text>
                     <InputGroup w="400px">
@@ -98,7 +94,7 @@ const BorrowingCalculator = ({ onSubmit }: Props) => {
                                name="down_payment_rate"
                                type="number"
                                onChange={handleInputChange}
-                               value={formData.down_payment_rate}
+                               value={(formData.down_payment_rate)?.toFixed(2)}
                         /><InputRightAddon>%</InputRightAddon>
                     </InputGroup>
                 </HStack>
@@ -175,7 +171,6 @@ const BorrowingCalculator = ({ onSubmit }: Props) => {
                         <InputRightAddon>$/year</InputRightAddon>
                     </InputGroup>
                 </HStack>
-
                 <HStack>
                     <Text flex="1">Home insurance:</Text>
                     <InputGroup w="400px">
@@ -190,9 +185,6 @@ const BorrowingCalculator = ({ onSubmit }: Props) => {
                     </InputGroup>
                 </HStack>
             </Stack>
-
-        </Container>
-
     )
 }
 

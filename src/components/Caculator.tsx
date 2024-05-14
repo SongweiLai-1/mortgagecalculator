@@ -31,62 +31,59 @@ interface Props {
     form: DiagramData;
 }
 
-function monthlyPayment (principal:number,yearlyInterestRate:number,yearlyPayment:number,numOfPaymentType:string) {
+function monthlyPayment(principal: number, yearlyInterestRate: number, yearlyPayment: number, numOfPaymentType: string): number {
+    const interestRate = (yearlyInterestRate || 0) / (numOfPaymentType === "monthly" ? 12 : 1) / 100;
+    const numberOfPayments = yearlyPayment * (numOfPaymentType === "monthly" ? 12 : 1);
 
-    const yearlyInterest = (yearlyInterestRate || 0) / 100 ;
-    const monthlyInterest = yearlyInterest / 12;
-    const numberOfPayment = yearlyPayment * 12;
-
-    if (numOfPaymentType) {
-        return (principal * monthlyInterest * Math.pow(1 + monthlyInterest, numberOfPayment)) /
-            (Math.pow(1 + monthlyInterest, numberOfPayment) - 1) } else {
-
-        return (principal * yearlyInterest * Math.pow(1 + yearlyInterest, yearlyPayment)) /
-            (Math.pow(1 + yearlyInterest, yearlyPayment) - 1) }
-    }
+    return (principal * interestRate * Math.pow(1 + interestRate, numberOfPayments)) /
+        (Math.pow(1 + interestRate, numberOfPayments) - 1);
+}
 
 
-function repaymentList (loanAmount:number,yearlyInterestRate:number,yearlyPayment:number,numOfPaymentType:string) {
 
+export function repaymentList(loanAmount: number, yearlyInterestRate: number, yearlyPayment: number, numOfPaymentType: string): repayment[] {
     const monthlyInterest = yearlyInterestRate / 12 / 100;
     const numOfMonthlyPayment = yearlyPayment * 12;
 
-    const monthly = monthlyPayment(loanAmount, yearlyInterestRate, yearlyPayment,'monthly');
-    const yearly = monthlyPayment(loanAmount, yearlyInterestRate, yearlyPayment, 'yearly');
 
-
-    let monthlyPayments: repayment[] = [];
-    let yearlyPayments: repayment[] = [];
-
+    let payments: repayment[] = [];
     let principal = loanAmount;
     let bal = loanAmount;
-    let equity = 0
-    let totalInterestPay = 0
+    let equity = 0;
+    let totalInterestPay = 0;
 
     if (numOfPaymentType === 'monthly') {
         for (let t = 1; t <= numOfMonthlyPayment; t++) {
-        const thisMonthsInterest=(principal-equity)*monthlyInterest;
-        const bal_thisMonthsInterest = bal*monthlyInterest;
-        equity+=(monthly-thisMonthsInterest);//得到资产
+            const monthly = monthlyPayment(loanAmount, yearlyInterestRate, yearlyPayment, 'monthly');
+            const thisMonthsInterest = (principal - equity) * monthlyInterest;
+            const bal_thisMonthsInterest = bal * monthlyInterest;
+            equity += (monthly - thisMonthsInterest); //得到资产
 
-        totalInterestPay += (monthly)
-        monthlyPayments.push({term: t , equity: equity ,totalInterestPay:totalInterestPay, balance: bal});
-        bal-=(monthly-thisMonthsInterest);}
-    }
-    else {
-        for (let t = 1; t <= yearlyPayment; t++) {
-            const thisYearlyInterest=(principal-equity)*yearlyInterestRate;
-            const bal_thisMonthsInterest = bal*yearlyInterestRate;
-            equity+=(yearly-thisYearlyInterest);//得到资产
+            totalInterestPay += (monthly)
+            payments.push({ term: t, equity: equity, totalInterestPay: totalInterestPay, balance: bal });
+            bal -= (monthly - thisMonthsInterest);
+        }
+    } else if (numOfPaymentType === 'yearly') {
+        for (let t = 0; t <= yearlyPayment; t++) {
+            const yearly = monthlyPayment(loanAmount, yearlyInterestRate, yearlyPayment, 'yearly');
+            const thisYearlyInterest = (principal - equity) * (yearlyInterestRate/100);
+            const thisYearlyEquity = (yearly-thisYearlyInterest)
 
+            equity += (yearly - thisYearlyInterest); //得到资产
             totalInterestPay += (yearly)
-            yearlyPayments.push({term: t , equity: equity ,totalInterestPay:totalInterestPay, balance: bal});
-            bal-=(yearly-thisYearlyInterest);}
+            payments.push({ term: t, equity: thisYearlyEquity, totalInterestPay: thisYearlyInterest, balance: bal });
+
+            bal -= (yearly - thisYearlyInterest);
+
+        }
+    } else {
+        throw new Error('Invalid payment type: ' + numOfPaymentType);
     }
 
-
-    return monthlyPayments
+    return payments;
 }
+
+
 
 function monthlyInsurence(term: number, insurence: number): number {
     const totalMonthlyTerm = term * 12;

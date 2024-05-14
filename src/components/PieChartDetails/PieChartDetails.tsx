@@ -14,8 +14,8 @@ export interface pieForm {
 const PieChartDetails = ({ pieForm }: { pieForm: DiagramData }) => {
     const { loanAmount = 0, term = 0, down_payment = 0, land_tax = 0, home_insurance = 0, yearlyInterestRate = 0 } = pieForm;
 
-    const monthly = monthlyPayment(loanAmount, yearlyInterestRate, term)
-    const totalInterest = monthly * term - loanAmount;
+    const yearly = monthlyPayment(loanAmount, yearlyInterestRate, term,'yearly')
+    const totalInterest = yearly * term - loanAmount;
     const totalPrincipal = pieForm.loanAmount || 0;
     const totalTax = land_tax * term;
     const totalHomeInsurace = home_insurance * term;
@@ -42,7 +42,6 @@ const PieChartDetails = ({ pieForm }: { pieForm: DiagramData }) => {
                     <PieChartDigram data={pieData} />
                 </CardBody>
             </Card>
-
         </>
 
     )

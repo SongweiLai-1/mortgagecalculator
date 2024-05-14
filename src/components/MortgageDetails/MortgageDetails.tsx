@@ -107,17 +107,18 @@ const MortgageDetails = ({form}: Props) => {
                             <p>Total Tax Paid: </p>
                             <p>Total Home Insurance: </p>
                         </Box>
-                        <Box>
+                        <Box marginLeft={70}>
                             <Text>{loanAmount}</Text>
                             <Text> {down_payment}</Text>
                             <Text>{totalInterestPay}</Text>
                             <Text>{totalTaxPaid}</Text>
                             <Text>{totalHomeInsurance}</Text>
                         </Box>
-                        {loanAmount > 0 ? (display ? null : <DetailBarChart form={detailForm} />) : null}
-
+                        <Box marginLeft={70} marginRight={10}>
+                            {loanAmount > 0 ? (display ? null : <DetailBarChart form={detailForm} />) : null}
+                        </Box>
                     </HStack>
-                            <Text>Total of {numOfPayments} Payments: {totalPayment}</Text>
+                            <Text>Total of {numOfPayments} Payments: {totalPayment.toFixed(2)}</Text>
 
                     </Stack>
                 </CardBody>
