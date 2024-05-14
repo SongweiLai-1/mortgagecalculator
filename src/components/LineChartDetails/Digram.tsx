@@ -1,12 +1,9 @@
 import React from "react";
-import {LineChart, Line, XAxis, YAxis, Tooltip, Legend, Area, AreaChart} from 'recharts';
-import { DiagramData } from '../Caculator';
+import {XAxis, YAxis, Tooltip, Legend, Area, AreaChart} from 'recharts';
 import {
-    Box,
     Card,
     CardBody,
     CardHeader,
-    Container,
     Divider,
     HStack,
     Stack,
@@ -30,7 +27,7 @@ interface Props {
 
 const Digram: React.FC<Props> = ({ data, monthlyRepayment,monthlyInsurence}: Props) => {
 
-    const renderLineChart = (
+    return (
         <Card maxW='xl' >
         <CardHeader >
             <Stack>
@@ -64,7 +61,6 @@ const Digram: React.FC<Props> = ({ data, monthlyRepayment,monthlyInsurence}: Pro
         </Card>
     );
 
-    return renderLineChart;
 };
 
 export default Digram;

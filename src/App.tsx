@@ -1,4 +1,4 @@
-import {Box, Container, Grid, GridItem, HStack, Stack} from '@chakra-ui/react';
+import {Container, Grid, GridItem} from '@chakra-ui/react';
 import React, {useState} from "react";
 import BorrowingCaculator from "./components/BorrowingCaculator"
 import Calculator, {DiagramData, initialDiagramData} from "./components/Caculator"
