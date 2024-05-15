@@ -30,14 +30,14 @@ const PieChartDetails = ({ pieForm }: { pieForm: DiagramData }) => {
 
     return (
         <>
-            <Card w='580px'>
+            <Card w='580px' overflow='hidden' >
                 <CardHeader >
                     <HStack>
                         <FaChartPie size={38}/>
                         <Heading size='md' ml={2}>Loan Breakdown</Heading>
                     </HStack>
+                    <Divider mt='28px' ml='-20px' w="300%"/>
                 </CardHeader>
-                <Divider w="100%"/>
                 <CardBody>
                     <PieChartDigram data={pieData} />
                 </CardBody>

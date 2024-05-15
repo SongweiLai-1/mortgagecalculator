@@ -19,7 +19,7 @@ const DetailBarChart = ({ form }: Props) => {
     // Prepare data array for BarChart
 
     const calculatePercentage = (value: number, totalPay: number) => {
-        return ((value / totalPay) * 100).toFixed(1) + '%';
+        return ((value / loanAmount) * 100).toFixed(2) + '%';
     };
 
     const loanAmountPercent = calculatePercentage(loanAmount, totalPay) ;

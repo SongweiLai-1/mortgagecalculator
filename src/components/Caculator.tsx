@@ -39,7 +39,9 @@ function monthlyPayment(principal: number, yearlyInterestRate: number, yearlyPay
         (Math.pow(1 + interestRate, numberOfPayments) - 1);
 }
 
-
+export function formatNumber(num:any) {
+    return num.toLocaleString();
+}
 
 export function repaymentList(loanAmount: number, yearlyInterestRate: number, yearlyPayment: number, numOfPaymentType: string): repayment[] {
     const monthlyInterest = yearlyInterestRate / 12 / 100;

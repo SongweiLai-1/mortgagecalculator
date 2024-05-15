@@ -5,7 +5,6 @@ import {
     Stack,
     Table,
     TableContainer,
-    Text,
     Th,
     Tr,
     Td,
@@ -31,9 +30,7 @@ const YearlyAmortizationSchedule = ({ form }: Props) => {
     // Provide fallback values or handle undefined values
     const data = repaymentList(loanAmount || 0, yearlyInterestRate || 0, term || 0, 'yearly');
 
-    function formatNumberWithCommas(number: number): string {
-        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+
 
     return (
         <div >
@@ -58,10 +55,10 @@ const YearlyAmortizationSchedule = ({ form }: Props) => {
 
                                     <Tbody>
                                         <Tr key={index}>
-                                            <Td width="100px">{d.term?.toFixed(0)}</Td>
-                                            <Td width="100px">{d.totalInterestPay?.toFixed(0)}</Td>
-                                            <Td width="100px">{d.equity?.toFixed(0)}</Td>
-                                            <Td width="100px">{d.balance?.toFixed(0)}</Td>
+                                            <Td width="100px">{d.term}</Td>
+                                            <Td width="100px">{d.totalInterestPay}</Td>
+                                            <Td width="100px">{d.equity}</Td>
+                                            <Td width="100px">{d.balance}</Td>
                                         </Tr>
                                     </Tbody>
                                 ))}

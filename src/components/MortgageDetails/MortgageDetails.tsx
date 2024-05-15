@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Card,
     CardBody,
@@ -10,10 +10,11 @@ import {
     Box,
     useBoolean, HStack, Divider
 } from "@chakra-ui/react";
-import { DiagramData } from '../Caculator'
-import {repayment} from "../LineChartDetails/Digram";
+import { DiagramData } from '../Caculator';
+import { repayment } from "../LineChartDetails/Digram";
 import { FaHome } from "react-icons/fa";
 import DetailBarChart from './DetailBarChart';
+import { formatNumber } from "../Caculator";
 
 export interface detail {
     loanAmount?: number;
@@ -33,20 +34,11 @@ function calculateTotalInterest(principal: number, monthlyInterest: number, numO
         (1 - Math.pow(1 + monthlyInterest, -numOfPayments));
     const totalPayment = monthlyPayment * numOfPayments;
     const totalInterest = totalPayment - principal;
-    if (isNaN(totalInterest)) {
-        const totalInterest = 0
-        return totalInterest
-    } else {
-        return parseFloat(totalInterest.toFixed(2));
-    }
+    return isNaN(totalInterest) ? 0 : parseFloat(totalInterest.toFixed(2));
 }
 
-function formatNumber(num:any) {
-    return num.toLocaleString();
-}
-
-const MortgageDetails = ({form}: Props) => {
-    const [detailForm, setdetailForm] = useState<detail>({})
+const MortgageDetails = ({ form }: Props) => {
+    const [detailForm, setDetailForm] = useState<detail>({});
 
     const {
         loanAmount = 0,
@@ -68,8 +60,7 @@ const MortgageDetails = ({form}: Props) => {
     const totalPayment = loanAmount + down_payment + totalInterestPay + totalTaxPaid + totalHomeInsurance;
 
     useEffect(() => {
-        setdetailForm({
-            ...detailForm,
+        setDetailForm({
             loanAmount: loanAmount,
             downPayment: down_payment,
             totalInterestPaid: totalInterestPay,
@@ -79,8 +70,14 @@ const MortgageDetails = ({form}: Props) => {
         });
     }, [totalInterestPay, totalHomeInsurance, totalTaxPaid]);
 
-    const [display, sedisplay] = useBoolean()
-    const downPaymentRate = ((down_payment / loanAmount) * 100).toFixed(2);
+    const [display, sedisplay] = useBoolean();
+    let downPaymentRate: number;
+
+    if (isNaN(down_payment) || isNaN(loanAmount) || loanAmount === 0) {
+        downPaymentRate = 0;
+    } else {
+        downPaymentRate = parseFloat(((down_payment / loanAmount) * 100).toFixed(2));
+    }
 
     return (
         <Card
@@ -93,7 +90,7 @@ const MortgageDetails = ({form}: Props) => {
                         <Heading size='md' ml={2}>Mortgage Detail</Heading>
                     </Flex>
                 </CardHeader>
-                <Divider w="300%" />
+                <Divider w="180%" />
                 <CardBody>
                     <Stack>
                         <HStack>
@@ -105,7 +102,7 @@ const MortgageDetails = ({form}: Props) => {
                                 <Text>Total Home Insurance: </Text>
                             </Box>
                             <Box marginLeft='200px'>
-                                <Text whiteSpace="nowrap">$ {formatNumber(loanAmount ?? 0)}</Text>
+                                <Text whiteSpace="nowrap">$ {formatNumber(loanAmount)}</Text>
                                 <HStack>
                                     <Text whiteSpace="nowrap">$ {formatNumber(down_payment)} </Text>
                                     <Text whiteSpace="nowrap">({downPaymentRate}%)</Text>
@@ -119,11 +116,12 @@ const MortgageDetails = ({form}: Props) => {
                             </Box>
                         </HStack>
                         <Divider />
-                        <Text mt='10px'>Total of {numOfPayments ?? 0} Payments: $ {formatNumber(totalPayment.toFixed(2))}</Text>
+                        <Text mt='10px'>Total of {numOfPayments} Payments: $ {formatNumber(totalPayment.toFixed(2))}</Text>
                     </Stack>
                 </CardBody>
             </Stack>
         </Card>
-    )
+    );
 }
-export default MortgageDetails
+
+export default MortgageDetails;
