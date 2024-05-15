@@ -10,7 +10,7 @@ import {
     Box,
     useBoolean, HStack, Divider
 } from "@chakra-ui/react";
-import { DiagramData, initialDiagramData} from '../Caculator'
+import { DiagramData} from '../Caculator'
 import {repayment} from "../LineChartDetails/Digram";
 import { FaHome } from "react-icons/fa";
 import DetailBarChart from './DetailBarChart';
