@@ -2,10 +2,8 @@ import React, {useEffect, useState} from "react";
 import {
     Card,
     CardBody,
-    CardFooter,
     Heading,
     Stack,
-    Button,
     Text,
     CardHeader,
     Flex,
