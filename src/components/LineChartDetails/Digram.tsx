@@ -28,7 +28,7 @@ interface Props {
 const Digram: React.FC<Props> = ({ data, monthlyRepayment,monthlyInsurence}: Props) => {
 
     return (
-        <Card maxW='xl' >
+        <Card w='580px' >
         <CardHeader >
             <Stack>
             <Text fontSize='3xl'>$ {isNaN(monthlyRepayment) ? '0.00' : monthlyRepayment.toFixed(2)}</Text>

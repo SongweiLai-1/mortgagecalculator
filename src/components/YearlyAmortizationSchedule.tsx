@@ -16,7 +16,6 @@ import {
     HStack
 } from "@chakra-ui/react";
 import { DiagramData, repaymentList } from "./Caculator";
-import { repayment } from "./LineChartDetails/Digram";
 
 interface Props {
     form: DiagramData;
@@ -42,9 +41,9 @@ const YearlyAmortizationSchedule = ({ form }: Props) => {
             <Box >
                 <Button onClick={() => setShowSlider(!showSlider)} colorScheme='blue'>Show Amortization Table</Button>
             </Box>
-            <Box mr='118px' ml='12px'>
+            <Box >
                 {showSlider ?
-                    <Card >
+                    <Card w='1210px'>
                     <TableContainer>
                         <Table size='sm'  overflowY ='hidden'>
                             <Thead>

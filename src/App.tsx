@@ -1,4 +1,4 @@
-import {Container, Grid, GridItem} from '@chakra-ui/react';
+import {Box, Container, Grid, GridItem} from '@chakra-ui/react';
 import React, {useState} from "react";
 import BorrowingCaculator from "./components/BorrowingCaculator"
 import Calculator, {DiagramData, initialDiagramData} from "./components/Caculator"
@@ -14,40 +14,41 @@ function App() {
         <>
             <Grid templateAreas={`"header header" 
                                     "form main"
-                                    "Table Table"
-                                     "Detail footer" `} gap={4} >
-                <GridItem pl='2' bg='white.300'  area={'header'}  >
+                                    "table table"
+                                     "Detail pieForm" `} gap={4} >
+                <GridItem pl='2' bg='blue.300'  area={'header'}  >
                     <Logo_img />
                 </GridItem>
-                <GridItem pl='2'  area={'form'} position="absolute" ml='120px' mt='90px'>
-                    <Container>
-                    <BorrowingCaculator onSubmit={(form) => setForm(form)} />
-                    </Container>
+                <GridItem pos='absolute' mt='100' pl='2' area={'form'} >
+                    <Box w='600px' ml='120px'>
+                        <BorrowingCaculator onSubmit={(form) => setForm(form)} />
+                    </Box>
                 </GridItem>
 
-                <GridItem pl='2' position="absolute" area={'main'} ml='750px' mt='90px' >
-                    <Container>
-                        <Calculator form={form} />
-                    </Container>
+                <GridItem pos='absolute' ml='650px' mt='100' pl='2' area={'main'}  >
+                    <Box  w='600px' ml='100px'>
+                    <Calculator form={form} />
+                    </Box>
                 </GridItem>
 
-                <GridItem pl='2' area={'Table'}>
-                    <Container mt='600px' >
-                        <YearlyAmortizationSchedule form={form} />
-                    </Container>
+                <GridItem pl='2' area={'table'}>
+                    <Box  w='600px' mt='580px' ml=' 120px'>
+                    <YearlyAmortizationSchedule form={form} />
+                    </Box>
                 </GridItem>
 
-                <GridItem pl='2' bg='white.300'  area={'Detail'} paddingX={5} >
-                    <Container  >
+                <GridItem pl='2' bg='white.300'  area={'Detail'} >
+                    <Container pos='absolute' ml='104px'>
                     <MortgageDetails form={form}/>
                     </Container>
                 </GridItem>
 
-                <GridItem pl='2' bg='white.300'  area={'footer'}>
-                    <Container  >
+                <GridItem pl='2' bg='white.300'  area={'pieForm'} >
+                    <Container ml='616px'>
                     <PieChartDetails pieForm={form} />
                     </Container>
                 </GridItem>
+
             </Grid>
             </>
     )

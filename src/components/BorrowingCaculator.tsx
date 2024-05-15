@@ -65,7 +65,7 @@ const BorrowingCalculator = ({ onSubmit }: Props) => {
 
     return (
             <Stack spacing={5}>
-                <HStack>
+                <HStack >
                     <Text flex="1">Home Value:</Text>
                     <InputGroup w="400px">
                         <InputLeftAddon>$</InputLeftAddon>

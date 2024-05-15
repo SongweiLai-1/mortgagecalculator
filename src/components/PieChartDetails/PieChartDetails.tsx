@@ -30,7 +30,7 @@ const PieChartDetails = ({ pieForm }: { pieForm: DiagramData }) => {
 
     return (
         <>
-            <Card maxW='xl'>
+            <Card w='580px'>
                 <CardHeader >
                     <HStack>
                         <FaChartPie size={38}/>
