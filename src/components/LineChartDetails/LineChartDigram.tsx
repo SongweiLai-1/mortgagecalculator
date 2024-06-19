@@ -10,7 +10,7 @@ import {
     Text,
     useColorModeValue
 } from "@chakra-ui/react";
-import {formatNumber} from '../Caculator'
+import {formatNumber} from '../function/Caculator'
 
 export interface repayment {
     term?: number;
@@ -24,7 +24,7 @@ interface Props {
     monthlyInsurence : number;
 }
 
-const Digram: React.FC<Props> = ({ data, monthlyRepayment,monthlyInsurence}: Props) => {
+const LineChartDigram: React.FC<Props> = ({ data, monthlyRepayment,monthlyInsurence}: Props) => {
 
     const formatToTwoDecimalPlaces = (num: number) => {
         return parseFloat(num.toFixed(2));
@@ -33,11 +33,32 @@ const Digram: React.FC<Props> = ({ data, monthlyRepayment,monthlyInsurence}: Pro
     // Format the data to ensure two decimal places for specific fields
     const formattedData = data.map(item => ({
         ...item,
-        totalInterestPay: item.totalInterestPay !== undefined ? formatToTwoDecimalPlaces(item.totalInterestPay) : undefined,
-        equity: item.equity !== undefined ? formatToTwoDecimalPlaces(item.equity) : undefined,
-        balance: item.balance !== undefined ? formatToTwoDecimalPlaces(item.balance) : undefined,
+        TotalInterestPay: item.totalInterestPay !== undefined ? formatToTwoDecimalPlaces(item.totalInterestPay) : undefined,
+        Equity: item.equity !== undefined ? formatToTwoDecimalPlaces(item.equity) : undefined,
+        Balance: item.balance !== undefined ? formatToTwoDecimalPlaces(item.balance) : undefined,
     }));
 
+    // Custom tick formatter to convert terms to years
+    const termToYearFormatter = (term: number): string => {
+        const year = Math.floor(term / 12);
+        return year.toString();
+    };
+
+    // Custom Tooltip content
+    const CustomTooltip = ({ active, payload, label }: any) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="custom-tooltip">
+                    <p className="label">{`Term: ${label}`}</p>
+                    {payload.map((entry: any, index: number) => (
+                        <p key={`item-${index}`}>{`${entry.name}: ${formatToTwoDecimalPlaces(entry.value)}`}</p>
+                    ))}
+                </div>
+            );
+        }
+
+        return null;
+    };
 
     return (
         <Card w='580px' >
@@ -54,15 +75,15 @@ const Digram: React.FC<Props> = ({ data, monthlyRepayment,monthlyInsurence}: Pro
             <HStack spacing={5} marginTop={4} marginBottom={4}><Divider /></HStack>
 
         <CardBody  bg={useColorModeValue('grey.50', 'grey.400')}>
-        <Text fontSize='xs'>Payment Trend (Amounts x Terms)</Text>
+        <Text fontSize='xs'>Payment Trend (Amounts x Years)</Text>
         <AreaChart
             width={500}
             height={400}
             data={formattedData}>
 
-            <XAxis dataKey="term" />
+            <XAxis dataKey="term" tickFormatter={termToYearFormatter} />
             <YAxis />
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             <Area name="Total Pay Within Interest" type="monotone" dataKey="totalInterestPay" stroke="#8884d8" fill="#8884d8" />
             <Area name="Net Equity" type="monotone" dataKey="equity" />
             <Area name="Balance" dataKey="balance" stroke="black" fill="transparent" />
@@ -74,4 +95,4 @@ const Digram: React.FC<Props> = ({ data, monthlyRepayment,monthlyInsurence}: Pro
 
 };
 
-export default Digram;
+export default LineChartDigram;

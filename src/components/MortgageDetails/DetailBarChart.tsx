@@ -1,5 +1,5 @@
 import React from 'react';
-import {BarChart, Bar, ResponsiveContainer, Tooltip, CartesianGrid, XAxis, YAxis, Legend, LabelList} from 'recharts';
+import {BarChart, Bar,  XAxis, YAxis, LabelList} from 'recharts';
 import { detail } from "./MortgageDetails";
 
 interface Props {

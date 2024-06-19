@@ -14,7 +14,7 @@ import {
     Card,
     HStack
 } from "@chakra-ui/react";
-import { DiagramData, repaymentList } from "./Caculator";
+import { DiagramData, repaymentList ,formatNumber} from "./function/Caculator";
 
 interface Props {
     form: DiagramData;
@@ -56,9 +56,9 @@ const YearlyAmortizationSchedule = ({ form }: Props) => {
                                     <Tbody>
                                         <Tr key={index}>
                                             <Td width="100px">{d.term}</Td>
-                                            <Td width="100px">{d.totalInterestPay}</Td>
-                                            <Td width="100px">{d.equity}</Td>
-                                            <Td width="100px">{d.balance}</Td>
+                                            <Td width="100px">{formatNumber(d.totalInterestPay)}</Td>
+                                            <Td width="100px">{formatNumber(d.equity)}</Td>
+                                            <Td width="100px">{formatNumber(d.balance)}</Td>
                                         </Tr>
                                     </Tbody>
                                 ))}

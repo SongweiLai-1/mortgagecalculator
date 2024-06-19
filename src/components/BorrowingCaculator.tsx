@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import React, {useEffect, useState} from "react";
 import './FormStyle.css';
-import { DiagramData, initialDiagramData} from './Caculator'
+import { DiagramData, initialDiagramData} from './function/Caculator'
 
 
 interface Props {

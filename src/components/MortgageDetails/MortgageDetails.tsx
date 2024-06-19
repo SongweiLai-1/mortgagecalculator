@@ -10,11 +10,11 @@ import {
     Box,
     useBoolean, HStack, Divider
 } from "@chakra-ui/react";
-import { DiagramData } from '../Caculator';
-import { repayment } from "../LineChartDetails/Digram";
+import { DiagramData } from '../function/Caculator';
+import { repayment } from "../LineChartDetails/LineChartDigram";
 import { FaHome } from "react-icons/fa";
 import DetailBarChart from './DetailBarChart';
-import { formatNumber } from "../Caculator";
+import { formatNumber } from "../function/Caculator";
 
 export interface detail {
     loanAmount?: number;
@@ -116,7 +116,7 @@ const MortgageDetails = ({ form }: Props) => {
                             </Box>
                         </HStack>
                         <Divider />
-                        <Text mt='10px'>Total of {numOfPayments} Payments: $ {formatNumber(totalPayment.toFixed(2))}</Text>
+                        <Text mt='10px'>Total of {numOfPayments} Payments: $ {formatNumber(totalPayment)}</Text>
                     </Stack>
                 </CardBody>
             </Stack>

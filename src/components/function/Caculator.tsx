@@ -1,6 +1,6 @@
 import React from "react";
-import Digram from "./LineChartDetails/Digram";
-import {repayment} from "./LineChartDetails/Digram";
+import LineChartDigram from "../LineChartDetails/LineChartDigram";
+import {repayment} from "../LineChartDetails/LineChartDigram";
 
 
 export const initialDiagramData: DiagramData = {
@@ -31,7 +31,7 @@ interface Props {
     form: DiagramData;
 }
 
-function monthlyPayment(principal: number, yearlyInterestRate: number, yearlyPayment: number, numOfPaymentType: string): number {
+export function monthlyPayment(principal: number, yearlyInterestRate: number, yearlyPayment: number, numOfPaymentType: string): number {
     const interestRate = (yearlyInterestRate || 0) / (numOfPaymentType === "monthly" ? 12 : 1) / 100;
     const numberOfPayments = yearlyPayment * (numOfPaymentType === "monthly" ? 12 : 1);
 
@@ -40,13 +40,21 @@ function monthlyPayment(principal: number, yearlyInterestRate: number, yearlyPay
 }
 
 export function formatNumber(num:any) {
+
     return num.toLocaleString();
 }
+
+export function calculatePercentage(total: number, value: number): number {
+    if (total === 0) {
+        return 0; // 如果总数为零，则百分比为零，或者可以返回 NaN 或者抛出错误，具体情况具体分析
+    }
+    return (value / total) * 100;
+}
+
 
 export function repaymentList(loanAmount: number, yearlyInterestRate: number, yearlyPayment: number, numOfPaymentType: string): repayment[] {
     const monthlyInterest = yearlyInterestRate / 12 / 100;
     const numOfMonthlyPayment = yearlyPayment * 12;
-
 
     let payments: repayment[] = [];
     let principal = loanAmount;
@@ -58,7 +66,6 @@ export function repaymentList(loanAmount: number, yearlyInterestRate: number, ye
         for (let t = 1; t <= numOfMonthlyPayment; t++) {
             const monthly = monthlyPayment(loanAmount, yearlyInterestRate, yearlyPayment, 'monthly');
             const thisMonthsInterest = (principal - equity) * monthlyInterest;
-            const bal_thisMonthsInterest = bal * monthlyInterest;
             equity += (monthly - thisMonthsInterest); //得到资产
 
             totalInterestPay += (monthly)
@@ -107,7 +114,7 @@ const Calculator = ({ form }: Props) => {
 
     return (
         <div>
-            <Digram
+            <LineChartDigram
                 data={repaymentList(loanAmount,yearlyInterestRate,term,'monthly')}
                 monthlyRepayment={monthlyPayment(loanAmount,yearlyInterestRate,term,'monthly')}
                 monthlyInsurence={monthlyInsurence(term,home_insurance)}
@@ -117,4 +124,3 @@ const Calculator = ({ form }: Props) => {
 }
 
 export default Calculator;
-export {monthlyPayment}
